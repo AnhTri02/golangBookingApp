@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"golangBookingApp/helper"
+	"sync"
 	"time"
 )
 
@@ -20,17 +21,24 @@ type UserData struct {
 	numberOfTickets uint
 }
 
+
+var wg = sync.WaitGroup{}
+
+
 func main() {
 
 	greetUsers()
 
-	for {
+
 
 		firstName, lastName, email, userTickets := getUserInput()
 		isValidNames, isValidEmail, isValidTicket := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
 		if isValidNames && isValidEmail && isValidTicket {
 			bookTicket(userTickets, firstName, lastName, email)
+
+
+			wg.Add(1)
 			go sendTicket(userTickets, firstName, lastName, email)
 
 			firstNames := getFirstNames()
@@ -38,7 +46,7 @@ func main() {
 
 			if remainingTickets == 0 {
 				fmt.Println("Conference booked out")
-				break
+				//break
 			}
 		} else {
 			if !isValidNames {
@@ -51,9 +59,9 @@ func main() {
 				fmt.Println("Ticket amount invalid")
 			}
 		}
-
+		wg.Wait()
 	}
-}
+
 
 func greetUsers() {
 	fmt.Printf("Welcome to %v booking application \n", conferenceName)
@@ -115,4 +123,7 @@ func sendTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Println("###################")
 	fmt.Printf("Sending ticket:\n %v\n to email adress: %v\n ", ticket, email)
 	fmt.Println("###################")
+
+	wg.Done() //remove thread från Add1
+
 }
