@@ -2,8 +2,13 @@ package main
 
 import "fmt" //format package
 
+func main() {
+	var conferenceName = "Go Conference"
+	const conferenceTickets = 50
+	var remainingTickets = 50
 
-func main(){
-	fmt.Println("Welcome to our conference booking application")
+	fmt.Printf("Welcome to %v booking application \n", conferenceName)
+	fmt.Printf("We have a total of %v tickets and %v tickets are available \n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
+
 }
