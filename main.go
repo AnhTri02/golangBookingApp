@@ -15,7 +15,7 @@ func main() {
 	fmt.Printf("We have a total of %v tickets and %v tickets are available \n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
 
-	for {
+	for remainingTickets > 0 && len(bookings) < 50 {
 
 		var firstName string
 		var lastName string
@@ -34,7 +34,12 @@ func main() {
 		fmt.Println("Enter the numbers of tickets: ")
 		fmt.Scan(&userTickets)
 
-		if userTickets <= remainingTickets {
+		var isValidNames bool = len(firstName) >= 2 && len(lastName) >= 2
+		var isValidEmail bool = strings.Contains(email, "@")
+		var isValidTicket bool = userTickets <= remainingTickets
+
+		
+		if isValidNames && isValidEmail && isValidTicket {
 				remainingTickets = remainingTickets - userTickets
 				bookings = append(bookings, firstName+" "+lastName)
 
@@ -43,7 +48,7 @@ func main() {
 
 				firstNames := []string{} //skapar tom slice av string (alla förnamn sparas här)
 				//blank identifier unused variables
-				
+
 				for _, x := range bookings { //loopar igenom bookings (alla för och efternamn)
 					var nameSeperate = strings.Fields(x)             //split för och efternamn
 					firstNames = append(firstNames, nameSeperate[0]) //lägg till endast förnamn
@@ -56,8 +61,8 @@ func main() {
 					break
 				}
 		} else{
-				fmt.Printf("We only have %v tickets remaining, can't book more\n", remainingTickets)
-				continue
+				fmt.Printf("Your input data is invalid, try again \n")
+
 		}
 		
 
