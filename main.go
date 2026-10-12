@@ -3,14 +3,23 @@ package main
 import (
 	"fmt"
 	"golangBookingApp/helper"
-	"strings"
+
 )
 
 const conferenceTickets uint = 50
-
 var conferenceName = "Go Conference"
 var remainingTickets uint = 50
-var bookings = []string{} //slice (dynamisk array)
+var bookings = make([]UserData, 0) //initize a lsit of UserData struct
+
+//som en lightweight klass i java
+type UserData struct {
+	firstName string
+	lastName string
+	email string  
+	numberOfTickets uint
+
+}
+
 func main() {
 
 	greetUsers()
@@ -51,12 +60,9 @@ func greetUsers() {
 }
 
 func getFirstNames() []string {
-
-	firstNames := []string{} //skapar tom slice av string (alla förnamn sparas här)
-	//blank identifier unused variables
-	for _, x := range bookings { //loopar igenom bookings (alla för och efternamn)
-		var nameSeperate = strings.Fields(x)             //split för och efternamn
-		firstNames = append(firstNames, nameSeperate[0]) //lägg till endast förnamn
+	firstNames := []string{}
+	for _, s := range bookings {
+		firstNames = append(firstNames, s.firstName)
 	}
 
 	return firstNames
@@ -84,9 +90,18 @@ func getUserInput() (string, string, string, uint) {
 }
 
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
-
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	
+	var userData = UserData {
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		numberOfTickets: userTickets,
+	}
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings is %v\n", bookings)
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will recieve confirmation email at %v \n", firstName, lastName, userTickets, email)
 	fmt.Printf("There are %v tickets remaining for %v\n", remainingTickets, conferenceName)
