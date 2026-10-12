@@ -3,21 +3,21 @@ package main
 import (
 	"fmt"
 	"golangBookingApp/helper"
-
+	"time"
 )
 
 const conferenceTickets uint = 50
+
 var conferenceName = "Go Conference"
 var remainingTickets uint = 50
 var bookings = make([]UserData, 0) //initize a lsit of UserData struct
 
-//som en lightweight klass i java
+// som en lightweight klass i java
 type UserData struct {
-	firstName string
-	lastName string
-	email string  
+	firstName       string
+	lastName        string
+	email           string
 	numberOfTickets uint
-
 }
 
 func main() {
@@ -31,6 +31,8 @@ func main() {
 
 		if isValidNames && isValidEmail && isValidTicket {
 			bookTicket(userTickets, firstName, lastName, email)
+			go sendTicket(userTickets, firstName, lastName, email)
+
 			firstNames := getFirstNames()
 			fmt.Printf("The first names of bookings are: %v \n", firstNames)
 
@@ -92,11 +94,10 @@ func getUserInput() (string, string, string, uint) {
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 
-	
-	var userData = UserData {
-		firstName: firstName,
-		lastName: lastName,
-		email: email,
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
 		numberOfTickets: userTickets,
 	}
 
@@ -106,4 +107,12 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will recieve confirmation email at %v \n", firstName, lastName, userTickets, email)
 	fmt.Printf("There are %v tickets remaining for %v\n", remainingTickets, conferenceName)
 
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	time.Sleep(5 * time.Second)
+	fmt.Println("###################")
+	fmt.Printf("Sending ticket:\n %v\n to email adress: %v\n ", ticket, email)
+	fmt.Println("###################")
 }
